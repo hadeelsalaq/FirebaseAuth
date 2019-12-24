@@ -31,6 +31,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+
 import com.mohanadalkrunz99.firebaseauth.Constants.*;
 
 import org.w3c.dom.Text;
@@ -130,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                Toast.makeText(MainActivity.this, "dataupdates", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MainActivity.this, "dataupdates", Toast.LENGTH_SHORT).show();
                 ArrayList<Note> tmpNotes= new ArrayList<>();
                 for (DataSnapshot postSnapshot: dataSnapshot.child(Constants.NOTES_NODE).getChildren()) {
 
@@ -139,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
                 }
                 notesProgress.setVisibility(View.GONE);
                 notes.clear();
+                Collections.reverse(tmpNotes);
                 notes.addAll(tmpNotes);
                 notesAdapter.notifyDataSetChanged();
 

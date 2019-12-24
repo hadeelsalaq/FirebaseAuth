@@ -103,6 +103,7 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/seeAllNoteBooks"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="show all"
@@ -123,7 +124,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="16dp"
-                android:text="You Don't Have Any Note Books, Click Here to add one"
+                android:gravity="center"
+                android:text="You Don't Have Any Note Books,\n Click Here to add one"
+                android:textAlignment="center"
                 android:visibility="gone" />
 
             <ProgressBar
@@ -135,6 +138,9 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/noteBookRec"
+                android:orientation="horizontal"
+                android:padding="8dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -161,6 +167,7 @@
                 android:layout_weight="1" />
 
             <TextView
+                android:id="@+id/seeAllNotes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="show all"
@@ -182,7 +189,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="16dp"
-                android:text="You Don't Have Any Notes, Click Here to add one"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:text="You Don't Have Any Notes \n Click Here to add one"
                 android:visibility="gone" />
 
             <ProgressBar
