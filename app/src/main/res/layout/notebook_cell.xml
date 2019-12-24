@@ -6,6 +6,7 @@
     android:minWidth="100dp"
     android:gravity="center"
 
+    android:id="@+id/cell"
     android:padding="8dp">
 
 

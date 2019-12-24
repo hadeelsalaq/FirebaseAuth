@@ -79,6 +79,22 @@ public class MainActivity extends AppCompatActivity {
         notesProgress= findViewById(R.id.noteProgress);
         noteBooksProgress= findViewById(R.id.notebooksProgress);
 
+        noNotesTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(MainActivity.this,AddNoteActivity.class);
+                startActivity(intent);
+
+            }
+        });
+        noNoteBooksTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent= new Intent(MainActivity.this,AddNoteBookActivity.class);
+                startActivity(intent);
+
+            }
+        });
 
         notes = new ArrayList<Note>();
         noteBooks = new ArrayList<NoteBook>();
@@ -146,13 +162,16 @@ public class MainActivity extends AppCompatActivity {
                 notes.addAll(tmpNotes);
                 notesAdapter.notifyDataSetChanged();
 
+
                 noNotesTextView.setVisibility((tmpNotes.size()==0)?View.VISIBLE:View.GONE);
 
 
                 ArrayList<NoteBook> tmpNoteBooks= new ArrayList<>();
                 for (DataSnapshot postSnapshot: dataSnapshot.child(NOTEBOOKS_NODE).getChildren()) {
 
-                    tmpNoteBooks.add(postSnapshot.getValue(NoteBook.class));
+                    NoteBook noteBook = postSnapshot.getValue(NoteBook.class);
+                    noteBook.setId(postSnapshot.getKey());
+                    tmpNoteBooks.add(noteBook);
 
                 }
                 noteBooksProgress.setVisibility(View.GONE);

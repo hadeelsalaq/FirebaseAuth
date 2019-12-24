@@ -2,6 +2,7 @@ package com.mohanadalkrunz99.firebaseauth.adapters;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mohanadalkrunz99.firebaseauth.NotebookActivity;
 import com.mohanadalkrunz99.firebaseauth.R;
 import com.mohanadalkrunz99.firebaseauth.models.NoteBook;
 
@@ -37,10 +40,12 @@ public class NoteBookAdapter extends RecyclerView.Adapter<NoteBookAdapter.NoteBo
     public void onBindViewHolder(@NonNull NoteBookViewHolder holder, int position) {
 
         holder.noteBookTitle.setText(noteBooks.get(position).getNoteBookName());
-        holder.noteBookTitle.setOnClickListener(new View.OnClickListener() {
+        holder.cell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "click"+ noteBooks.get(position).getNoteBookName(), Toast.LENGTH_SHORT).show();
+
+                Intent intent= new Intent(context, NotebookActivity.class);
+                context.startActivity(intent);
             }
         });
     }
@@ -52,10 +57,12 @@ public class NoteBookAdapter extends RecyclerView.Adapter<NoteBookAdapter.NoteBo
 
     class NoteBookViewHolder extends RecyclerView.ViewHolder{
 
+        CardView cell;
         TextView noteBookTitle;
         public NoteBookViewHolder(@NonNull View itemView) {
             super(itemView);
             noteBookTitle = itemView.findViewById(R.id.noteBookTitle);
+            cell=itemView.findViewById(R.id.cell);
         }
     }
 }

@@ -11,7 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ForgotPasswordActivity"></activity>
+        <activity android:name=".AddNoteBookActivity"></activity>
+        <activity
+            android:name=".AllNoteBooksActivity"
+            android:label="@string/title_activity_all_note_books"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ForgotPasswordActivity" />
         <activity
             android:name=".NotebookActivity"
             android:label="@string/title_activity_notebook"
