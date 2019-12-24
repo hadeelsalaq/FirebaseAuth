@@ -19,21 +19,15 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-// Write a message to the database
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-
-        myRef.setValue("Hello, World!");
 
 
-
-        FirebaseDatabase firebaseDatabase= FirebaseDatabase.getInstance();
-        firebaseDatabase.getReference().child("hi").setValue("ggi");
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user!=null)
         {
+
             Intent intent = new Intent(SplashActivity.this , MainActivity.class);
             startActivity(intent);
+            finish();
         }
 
         FirebaseAuth.getInstance().sendPasswordResetEmail("a@a.com");
@@ -41,6 +35,7 @@ public class SplashActivity extends AppCompatActivity {
         findViewById(R.id.signInBtn).setOnClickListener(v->{
             Intent intent = new Intent(this,LoginActivity.class);
             startActivity(intent);
+            finish();
 
         });
 
@@ -48,6 +43,7 @@ public class SplashActivity extends AppCompatActivity {
         findViewById(R.id.signUpBtn).setOnClickListener(v->{
             Intent intent = new Intent(this,SignUpActivity.class);
             startActivity(intent);
+            finish();
 
         });
 

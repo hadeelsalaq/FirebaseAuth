@@ -17,6 +17,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -26,7 +28,7 @@ public class SignUpActivity extends AppCompatActivity {
     ProgressBar progressBar;
 
     FirebaseAuth mAuth;
-
+    DatabaseReference reference;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,12 +37,13 @@ public class SignUpActivity extends AppCompatActivity {
         progressBar= findViewById(R.id.progSignUp);
 
         mAuth = FirebaseAuth.getInstance();
-
+        reference = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = mAuth.getCurrentUser();
         if (user!=null)
         {
             Intent intent = new Intent(SignUpActivity.this , MainActivity.class);
             startActivity(intent);
+            finish();
         }
 
         emailEt = findViewById(R.id.emailEt);
@@ -59,11 +62,23 @@ public class SignUpActivity extends AppCompatActivity {
         Log.d("test", "onCreate: in method");
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnSuccessListener(authResult -> {
-                    progressBar.setVisibility(View.GONE);
+
 
                     Log.d("test", "onCreate: success");
-                    Intent intent = new Intent(SignUpActivity.this , MainActivity.class);
-                    startActivity(intent);
+
+                    reference.child(mAuth.getCurrentUser().getUid())
+                            .child("email").setValue(mAuth.getCurrentUser().getEmail())
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    progressBar.setVisibility(View.GONE);
+
+                                    Intent intent = new Intent(SignUpActivity.this , MainActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            });
+
 
 
                 }).addOnFailureListener(e -> {
