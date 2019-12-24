@@ -131,28 +131,37 @@ public class NotebookActivity extends AppCompatActivity {
         userID = firebaseUser.getUid();
         Log.d(TAG, "fireBaseUpdate: " + userID);
 //        databaseReference.child(userID).
-        Query query = databaseReference.child(userID).child(Constants.NOTES_NODE)
-                .orderByChild(Constants.NOTEBOOK_ID_OF_NOTE).equalTo(noteBookID);
+//        Query query = databaseReference.child(userID).child(Constants.NOTES_NODE);
+//                .orderByChild(Constants.NOTEBOOK_ID_OF_NOTE).endAt(noteBookID);
 
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+//        query.addListenerForSingleValueEvent(new ValueEventListener() {
+
+        Log.d(TAG, "fina "+userID+ "  "+noteBookID);
+
+        databaseReference.child(userID) .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-//                Toast.makeText(NotebookActivity.this, "data updates", Toast.LENGTH_SHORT).show();
-                ArrayList<Note> tmpNotes = new ArrayList<>();
-                for (DataSnapshot postSnapshot : dataSnapshot.child(Constants.NOTES_NODE).getChildren()) {
+//                Toast.makeText(MainActivity.this, "dataupdates", Toast.LENGTH_SHORT).show();
+                ArrayList<Note> tmpNotes= new ArrayList<>();
+                for (DataSnapshot postSnapshot: dataSnapshot.child(Constants.NOTES_NODE).getChildren()) {
 
-                    tmpNotes.add(postSnapshot.getValue(Note.class));
+
+                    Note note = postSnapshot.getValue(Note.class);
+                    if (note.getNotebookID()!=null&&note.getNotebookID().equals(noteBookID)){
+
+                        tmpNotes.add(note);
+                    }
 
                 }
-                Collections.reverse(tmpNotes);
-
                 notesProgress.setVisibility(View.GONE);
                 notes.clear();
+                Collections.reverse(tmpNotes);
                 notes.addAll(tmpNotes);
                 notesAdapter.notifyDataSetChanged();
 
-                noNotesTextView.setVisibility((tmpNotes.size() == 0) ? View.VISIBLE : View.GONE);
+
+                noNotesTextView.setVisibility((tmpNotes.size()==0)?View.VISIBLE:View.GONE);
 
 
             }
@@ -162,6 +171,41 @@ public class NotebookActivity extends AppCompatActivity {
 
             }
         });
+
+//
+//        databaseReference.child(userID).child(Constants.NOTES_NODE)
+//        .addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//
+////                Toast.makeText(NotebookActivity.this, "data updates", Toast.LENGTH_SHORT).show();
+//                ArrayList<Note> tmpNotes = new ArrayList<>();
+//                for (DataSnapshot postSnapshot : dataSnapshot.child(Constants.NOTES_NODE).getChildren()) {
+//
+//                    Note note = postSnapshot.getValue(Note.class);
+//
+////                    if (note.getNotebookID().equals(noteBookID)){
+//
+//                        tmpNotes.add(postSnapshot.getValue(Note.class));
+////                    }
+//            }
+//                Collections.reverse(tmpNotes);
+//
+//                notesProgress.setVisibility(View.GONE);
+//                notes.clear();
+//                notes.addAll(tmpNotes);
+//                notesAdapter.notifyDataSetChanged();
+//
+//                noNotesTextView.setVisibility((tmpNotes.size() == 0) ? View.VISIBLE : View.GONE);
+//
+//
+//            }
+//
+//            @Override
+//            public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//            }
+//        });
     }
 
 

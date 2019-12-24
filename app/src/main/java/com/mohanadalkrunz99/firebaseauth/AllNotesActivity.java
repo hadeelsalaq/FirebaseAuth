@@ -3,7 +3,6 @@ package com.mohanadalkrunz99.firebaseauth;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,7 +15,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.mohanadalkrunz99.firebaseauth.adapters.NoteBookAdapter;
 import com.mohanadalkrunz99.firebaseauth.adapters.NotesAdapter;
 import com.mohanadalkrunz99.firebaseauth.models.Note;
-import com.mohanadalkrunz99.firebaseauth.models.NoteBook;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,116 +26,64 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
-import com.mohanadalkrunz99.firebaseauth.Constants.*;
 
-import org.w3c.dom.Text;
-
-import static com.mohanadalkrunz99.firebaseauth.Constants.NOTEBOOKS_NODE;
-
-
-public class MainActivity extends AppCompatActivity {
-    private static final String TAG="MainActivity";
+public class AllNotesActivity extends AppCompatActivity {
 
     FirebaseUser firebaseUser ;
     DatabaseReference databaseReference;
-    RecyclerView noteBookRec,notesRec;
+    RecyclerView notesRec;
     NotesAdapter notesAdapter;
-    NoteBookAdapter noteBookAdapter;
     ArrayList<Note> notes;
-    ArrayList<NoteBook> noteBooks;
     private String userID;
-    private TextView logoutTextView,noNoteBooksTextView,noNotesTextView,seeAllNoteBooks,seeAllNotes;
-    private ProgressBar notesProgress,noteBooksProgress;
+    private TextView logoutTextView,noNotesTextView;
+    private ProgressBar notesProgress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
+        setContentView(R.layout.activity_all_notes);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-
         initUI();
 
+
     }
+
 
     private void initUI() {
         FirebaseAuth.getInstance().getCurrentUser().getUid();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         databaseReference= FirebaseDatabase.getInstance().getReference();
 
-        noteBookRec = findViewById(R.id.noteBookRec);
         notesRec = findViewById(R.id.notesRec);
         noNotesTextView = findViewById(R.id.noNotesTextView);
-        noNoteBooksTextView= findViewById(R.id.noNoteBooksTextView);
-        notesProgress= findViewById(R.id.noteProgress);
-        noteBooksProgress= findViewById(R.id.notebooksProgress);
+        notesProgress= findViewById(R.id.notesProgress);
 
-        seeAllNoteBooks = findViewById(R.id.seeAllNoteBooks);
-        seeAllNotes = findViewById(R.id.seeAllNotes);
 
-        seeAllNotes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,AllNotesActivity.class);
-                startActivity(intent);
-            }
-        });
-        seeAllNoteBooks.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,AllNoteBooksActivity.class);
-                startActivity(intent);
-            }
-        });
         noNotesTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent= new Intent(MainActivity.this,AddNoteActivity.class);
-                startActivity(intent);
-
-            }
-        });
-        noNoteBooksTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent= new Intent(MainActivity.this,AddNoteBookActivity.class);
+                Intent intent= new Intent(AllNotesActivity.this,AddNoteActivity.class);
                 startActivity(intent);
 
             }
         });
 
         notes = new ArrayList<Note>();
-        noteBooks = new ArrayList<NoteBook>();
 
         notesRec.setLayoutManager(new LinearLayoutManager(this,RecyclerView.VERTICAL,false));
-        noteBookRec.setLayoutManager(new LinearLayoutManager(this,RecyclerView.HORIZONTAL,false));
         notesAdapter = new NotesAdapter(notes,this);
-        noteBookAdapter = new NoteBookAdapter(this,noteBooks);
         notesRec.setAdapter(notesAdapter);
-        noteBookRec.setAdapter(noteBookAdapter);
-        logoutTextView = findViewById(R.id.logoutTextView);
-        logoutTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(MainActivity.this,SplashActivity.class);
-                startActivity(intent);
-                finish();
-            }
-        });
-
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(MainActivity.this,AddNoteActivity.class);
+                Intent intent= new Intent(AllNotesActivity.this,AddNoteActivity.class);
                 startActivity(intent);
             }
         });
@@ -153,15 +99,11 @@ public class MainActivity extends AppCompatActivity {
     private void fireBaseUpdate(){
 
 
-        noNoteBooksTextView.setVisibility(View.GONE);
         noNotesTextView.setVisibility(View.GONE);
-        noteBooksProgress.setVisibility(View.VISIBLE);
         notesProgress.setVisibility(View.VISIBLE);
 
 
         userID = firebaseUser.getUid();
-        Log.d(TAG, "fireBaseUpdate: "+userID);
-        Log.d(TAG, "fireBaseUpdate: ");
         databaseReference.child(userID) .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -183,19 +125,6 @@ public class MainActivity extends AppCompatActivity {
                 noNotesTextView.setVisibility((tmpNotes.size()==0)?View.VISIBLE:View.GONE);
 
 
-                ArrayList<NoteBook> tmpNoteBooks= new ArrayList<>();
-                for (DataSnapshot postSnapshot: dataSnapshot.child(NOTEBOOKS_NODE).getChildren()) {
-
-                    NoteBook noteBook = postSnapshot.getValue(NoteBook.class);
-                    noteBook.setId(postSnapshot.getKey());
-                    tmpNoteBooks.add(noteBook);
-
-                }
-                noteBooksProgress.setVisibility(View.GONE);
-                noteBooks.clear();
-                noteBooks.addAll(tmpNoteBooks);
-                noteBookAdapter.notifyDataSetChanged();
-                noNoteBooksTextView.setVisibility((tmpNoteBooks.size()==0)?View.VISIBLE:View.GONE);
             }
 
             @Override

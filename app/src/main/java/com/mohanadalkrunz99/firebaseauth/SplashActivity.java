@@ -35,7 +35,7 @@ public class SplashActivity extends AppCompatActivity {
         findViewById(R.id.signInBtn).setOnClickListener(v->{
             Intent intent = new Intent(this,LoginActivity.class);
             startActivity(intent);
-            finish();
+//            finish();
 
         });
 
@@ -43,7 +43,7 @@ public class SplashActivity extends AppCompatActivity {
         findViewById(R.id.signUpBtn).setOnClickListener(v->{
             Intent intent = new Intent(this,SignUpActivity.class);
             startActivity(intent);
-            finish();
+//            finish();
 
         });
 
