@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mohanadalkrunz99.firebaseauth.Constants;
 import com.mohanadalkrunz99.firebaseauth.NotebookActivity;
 import com.mohanadalkrunz99.firebaseauth.R;
 import com.mohanadalkrunz99.firebaseauth.models.NoteBook;
@@ -45,6 +46,7 @@ public class NoteBookAdapter extends RecyclerView.Adapter<NoteBookAdapter.NoteBo
             public void onClick(View v) {
 
                 Intent intent= new Intent(context, NotebookActivity.class);
+                intent.putExtra(Constants.NOTEBOOK_ID_INTENT,noteBooks.get(position).getId());
                 context.startActivity(intent);
             }
         });

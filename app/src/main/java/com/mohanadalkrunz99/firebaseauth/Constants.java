@@ -1,6 +1,6 @@
 package com.mohanadalkrunz99.firebaseauth;
 
-class Constants {
+public class Constants {
 
     public static final String NOTEBOOK_INTENT = "noteBookIntent";
     public static final String NOTEBOOK_ID_INTENT = "notebookID";
