@@ -40,7 +40,7 @@ public class NotebookActivity extends AppCompatActivity {
     private static final String TAG = "NotebookActivity";
     NoteBook noteBook;
 
-    FirebaseUser firebaseUser ;
+    FirebaseUser firebaseUser;
     DatabaseReference databaseReference;
     RecyclerView notesRec;
     NotesAdapter notesAdapter;
@@ -64,43 +64,52 @@ public class NotebookActivity extends AppCompatActivity {
 
 
         intent = getIntent();
-        if (intent.getExtras()!=null){
-            if (intent.getStringExtra(Constants.NOTEBOOK_ID_INTENT)!=null){
-                noteBookID = intent.getStringExtra(Constants.NOTEBOOK_ID_INTENT);
-            }
+        if (intent.getStringExtra(Constants.NOTEBOOK_ID_INTENT) != null) {
+            noteBookID = intent.getStringExtra(Constants.NOTEBOOK_ID_INTENT);
+            Log.d(TAG, "initUI: "+noteBookID);
         }
-
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
-
-        FirebaseAuth.getInstance().getCurrentUser().getUid();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        databaseReference= FirebaseDatabase.getInstance().getReference();
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                toolbar.setTitle(dataSnapshot.child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                        .child(NOTEBOOKS_NODE)
+                        .child(noteBookID)
+                        .child(Constants.NotebookName).getValue().toString());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent= new Intent(NotebookActivity.this, AddNoteActivity.class);
-                intent.putExtra("notebook",noteBook.getId());
+                Intent intent = new Intent(NotebookActivity.this, AddNoteActivity.class);
+                intent.putExtra(Constants.NOTEBOOK_ID_INTENT,noteBookID);
                 startActivity(intent);
             }
         });
         notesRec = findViewById(R.id.notesRec);
         noNotesTextView = findViewById(R.id.noNotesTextView);
-        notesProgress= findViewById(R.id.noteProgress);
+        notesProgress = findViewById(R.id.noteProgress);
 
 
         notes = new ArrayList<Note>();
 
-        notesRec.setLayoutManager(new LinearLayoutManager(this,RecyclerView.VERTICAL,false));
-        notesAdapter = new NotesAdapter(notes,this);
+        notesRec.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
+        notesAdapter = new NotesAdapter(notes, this);
         notesRec.setAdapter(notesAdapter);
-
 
 
     }
@@ -112,7 +121,7 @@ public class NotebookActivity extends AppCompatActivity {
 
     }
 
-    private void fireBaseUpdate(){
+    private void fireBaseUpdate() {
 
 
         noNotesTextView.setVisibility(View.GONE);
@@ -120,19 +129,18 @@ public class NotebookActivity extends AppCompatActivity {
 
 
         userID = firebaseUser.getUid();
-        Log.d(TAG, "fireBaseUpdate: "+userID);
-        Log.d(TAG, "fireBaseUpdate: ");
+        Log.d(TAG, "fireBaseUpdate: " + userID);
 //        databaseReference.child(userID).
-                Query query = databaseReference.child(userID).child(Constants.NOTES_NODE)
-                        .orderByChild(Constants.NOTEBOOK_ID_OF_NOTE).equalTo(noteBookID);
+        Query query = databaseReference.child(userID).child(Constants.NOTES_NODE)
+                .orderByChild(Constants.NOTEBOOK_ID_OF_NOTE).equalTo(noteBookID);
 
-                query.addListenerForSingleValueEvent(new ValueEventListener() {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
 //                Toast.makeText(NotebookActivity.this, "data updates", Toast.LENGTH_SHORT).show();
-                ArrayList<Note> tmpNotes= new ArrayList<>();
-                for (DataSnapshot postSnapshot: dataSnapshot.child(Constants.NOTES_NODE).getChildren()) {
+                ArrayList<Note> tmpNotes = new ArrayList<>();
+                for (DataSnapshot postSnapshot : dataSnapshot.child(Constants.NOTES_NODE).getChildren()) {
 
                     tmpNotes.add(postSnapshot.getValue(Note.class));
 
@@ -144,7 +152,7 @@ public class NotebookActivity extends AppCompatActivity {
                 notes.addAll(tmpNotes);
                 notesAdapter.notifyDataSetChanged();
 
-                noNotesTextView.setVisibility((tmpNotes.size()==0)?View.VISIBLE:View.GONE);
+                noNotesTextView.setVisibility((tmpNotes.size() == 0) ? View.VISIBLE : View.GONE);
 
 
             }
@@ -155,7 +163,6 @@ public class NotebookActivity extends AppCompatActivity {
             }
         });
     }
-
 
 
 }

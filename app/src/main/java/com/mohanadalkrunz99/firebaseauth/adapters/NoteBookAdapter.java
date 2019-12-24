@@ -3,6 +3,7 @@ package com.mohanadalkrunz99.firebaseauth.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,8 @@ import com.mohanadalkrunz99.firebaseauth.R;
 import com.mohanadalkrunz99.firebaseauth.models.NoteBook;
 
 import java.util.ArrayList;
+
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class NoteBookAdapter extends RecyclerView.Adapter<NoteBookAdapter.NoteBookViewHolder> {
 
@@ -47,6 +50,7 @@ public class NoteBookAdapter extends RecyclerView.Adapter<NoteBookAdapter.NoteBo
 
                 Intent intent= new Intent(context, NotebookActivity.class);
                 intent.putExtra(Constants.NOTEBOOK_ID_INTENT,noteBooks.get(position).getId());
+                Log.d(TAG, "onClick: "+noteBooks.get(position).getId());
                 context.startActivity(intent);
             }
         });

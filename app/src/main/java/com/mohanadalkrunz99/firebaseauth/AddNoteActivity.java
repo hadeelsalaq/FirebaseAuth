@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -30,9 +31,15 @@ public class AddNoteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_note);
+
         getSupportActionBar().setTitle("Add new note");
-        if (intent!=null){
-            notebookID = intent.getExtras().getString(Constants.NOTEBOOK_INTENT);
+
+
+        intent = getIntent();
+
+        if (intent.getStringExtra(Constants.NOTEBOOK_ID_INTENT) != null) {
+            notebookID = intent.getStringExtra(Constants.NOTEBOOK_ID_INTENT);
+            Log.d("test", "note new : "+notebookID);
         }
         noteTitleTextInpuEditText = findViewById(R.id.noteTitleTextInpuEditText);
         noteContentTextInpuEditText = findViewById(R.id.noteContentTextInpuEditText);
@@ -49,8 +56,9 @@ public class AddNoteActivity extends AppCompatActivity {
 
                         Note note = new Note();
                         note.setNoteTitle(noteTitleTextInpuEditText.getText().toString());
+                        Log.d("tedt", "onClick: "+notebookID);
                         note.setNoteContent(noteContentTextInpuEditText.getText().toString());
-                        if (notebookID!=null&& !notebookID.isEmpty()){note.setNoteBookId(notebookID);}
+                        if (notebookID!=null){note.setNotebookID(notebookID);}
                         reference.push().setValue(note).addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {

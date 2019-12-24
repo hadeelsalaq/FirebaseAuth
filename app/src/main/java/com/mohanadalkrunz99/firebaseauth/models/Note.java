@@ -6,7 +6,7 @@ public class Note {
     private String noteTitle;
     private String noteContent;
     private int noteColor;
-    private String noteBookId;
+    private String notebookID;
 
 
     public Note() {
@@ -44,11 +44,11 @@ public class Note {
         this.noteTitle = noteTitle;
     }
 
-    public String getNoteBookId() {
-        return noteBookId;
+    public String getNotebookID() {
+        return notebookID;
     }
 
-    public void setNoteBookId(String noteBookId) {
-        this.noteBookId = noteBookId;
+    public void setNotebookID(String notebookID) {
+        this.notebookID = notebookID;
     }
 }
